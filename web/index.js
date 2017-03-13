@@ -7,18 +7,22 @@ let currentStudentID;
 let deletedStudents = [];
 let firstTimeThrough = true;
 let isEditing;
+let currentIndexLoaded = 0;
+let loadingAmount = 5;
 
 // -------------- Code to be executed when page has loaded -------------------------------
 // ---------------------------------------------------------------------------------------
 $(document).ready(function(){
-
     $('.modal').modal();
     $('select').material_select();
-    // // Hide the tables and tiles
-    // $("#studentDataTiles").hide();
-    // $("#studentDataTableDiv").hide();
-    // hideAllSortButtons();
-    //
+
+    $('#tilesDiv').hide();
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+
     // // Set up tooltips
     // $('[data-toggle="tooltip"]').tooltip();
     //
@@ -44,10 +48,11 @@ app.controller('studentsController', function($scope, $http){
         .then(function(response) {
             listOfStudentIDs = response.data;
 
-            for (index in listOfStudentIDs){
-                $http.get('/api/v1/students/' + listOfStudentIDs[index])
+            for (currentIndexLoaded = 0; currentIndexLoaded < loadingAmount && currentIndexLoaded < listOfStudentIDs.length; currentIndexLoaded++){
+                $http.get('/api/v1/students/' + listOfStudentIDs[currentIndexLoaded])
                     .then(function(response){
-                       $scope.studentList.push(response.data);
+                        response.data.id = listOfStudentIDs[currentIndexLoaded];
+                        $scope.studentList.push(response.data);
                     });
             }
         });
@@ -80,8 +85,6 @@ app.controller('studentsController', function($scope, $http){
         $scope.phoneNumber = "";
         $scope.year = "";
 
-        Materialize.updateTextFields();
-
         isEditing = false;
     }
 
@@ -100,17 +103,17 @@ app.controller('studentsController', function($scope, $http){
 
         if (isEditing === true){
             $http({
-                type: 'PUT',
+                method: 'PUT',
                 url: `/api/v1/students/${currentStudentID}`,
-                data: JSONStudentData
+                data: jsonStudentData
             }).then(function(response) {
                 // edit the view
             });
         } else {
             $http({
-                type: 'POST',
+                method: 'POST',
                 url: `/api/v1/students/`,
-                data: JSONStudentData
+                data: jsonStudentData
             }).then(function(response) {
                     // Add student to list
                 }
@@ -118,26 +121,66 @@ app.controller('studentsController', function($scope, $http){
         }
     }
 
-    $scope.deleteStudent = function(studentID) {
+    $scope.deleteStudent = function(studentInfo) {
         //http request to delete id
         $http({
-            url: '/api/v1/students/' + studentID,
-            type: 'DELETE',
+            url: '/api/v1/students/' + studentInfo.id,
+            method: 'DELETE',
         }).then(function() {
             // filter on ID
+            deletedStudents.push(studentInfo);
         });
     }
 
     $scope.showTable = function() {
-        $("#tableDiv").slideDown();
-        $("#tilesDiv").slideUp();
+        $("#tableDiv").slideDown('slow');
+        $("#tilesDiv").slideUp('slow');
         Cookies.set('ViewType', 'Table')
     }
 
     $scope.showTiles = function() {
-        $("#tableDiv").slideUp();
-        $("#tilesDiv").slideDown();
+        $("#tableDiv").slideUp('slow');
+        $("#tilesDiv").slideDown('slow');
         Cookies.set('ViewType', 'Tiles')
+    }
+
+    $scope.getSchoolYearFromNumber = function(theYear) {
+        if (theYear === 1 || theYear === '1') return "Freshman";
+        if (theYear === 2 || theYear === '2') return "Sophomore";
+        if (theYear === 3 || theYear === '3') return "Junior";
+        if (theYear === 4 || theYear === '4') return "Senior";
+    }
+
+    $scope.loadMore = function() {
+        if (currentIndexLoaded >= listOfStudentIDs.length){
+            Materialize.toast('You have loaded all there is. Great job!', 5000);
+            return;
+        }
+
+        for (let i = 0; i < loadingAmount && currentIndexLoaded < listOfStudentIDs.length; i++){
+            $http.get('/api/v1/students/' + listOfStudentIDs[currentIndexLoaded])
+                .then(function(response){
+                    response.data.id = listOfStudentIDs[currentIndexLoaded];
+                    $scope.studentList.push(response.data);
+                });
+            currentIndexLoaded++;
+        }
+    }
+
+    $scope.restoreLastStudent = function() {
+        if (deletedStudents.length === 0){
+            Materialize.toast('Sorry, you gotta delete some before you bring \'em back', 5000)
+            return;
+        }
+
+        $http({
+            method: 'POST',
+            url: `/api/v1/students/`,
+            data: deletedStudents.pop()
+        }).then(function(response) {
+                // Add student to list
+            }
+        );
     }
 });
 
