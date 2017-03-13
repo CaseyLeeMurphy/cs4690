@@ -53,45 +53,53 @@
                 <table class='table highlight'>
                     <thead class="light-blue accent-1 ">
                         <tr >
-                            <th >
+                            <th ng-click="AdjustSort('fname')" style="width:125px">
                                 Full Name
-                                <i ng-show="showEndDate" class="material-icons small">trending_down</i>
+                                <i ng-show="showFullNameDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showFullNameAsc" class="material-icons tiny">trending_up</i>
                             </th >
-                            <th >
+                            <th ng-click="AdjustSort('startDate')" style="width:100px">
                                 Start Date
-                                <i ng-show="showStartDate" class="material-icons small">trending_down</i>
+                                <i ng-show="showStartDateDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showStartDateAsc" class="material-icons tiny">trending_up</i>
                             </th>
-                            <th >
+                            <th ng-click="AdjustSort('street')">
                                 Street
-                                <i ng-show="showStreet" class="material-icons small">trending_down</i>
+                                <i ng-show="showStreetDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showStreetAsc" class="material-icons tiny">trending_up</i>
                             </th >
-                            <th >
+                            <th ng-click="AdjustSort('city')">
                                 City
-                                <i ng-show="showCity" class="material-icons small">trending_down</i>
+                                <i ng-show="showCityDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showCityAsc" class="material-icons tiny">trending_up</i>
                             </th>
-                            <th >
+                            <th ng-click="AdjustSort('state')" style="width:75px">
                                 State
-                                <i ng-show="showState" class="material-icons small">trending_down</i>
+                                <i ng-show="showStateDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showStateAsc" class="material-icons tiny">trending_up</i>
                             </th >
-                            <th >
+                            <th ng-click="AdjustSort('zip')" style="width:100px">
                                 Zip Code
-                                <i ng-show="showZipCode" class="material-icons small">trending_down</i>
+                                <i ng-show="showZipCodeDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showZipCodeAsc" class="material-icons tiny">trending_up</i>
                             </th>
-                            <th >
-                                Phone Number
-                                <i ng-show="showPhoneNumber" class="material-icons small">trending_down</i>
+                            <th ng-click="AdjustSort('phone')" style="width:100px">
+                                Phone
+                                <i ng-show="showPhoneNumberDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showPhoneNumberAsc" class="material-icons tiny">trending_up</i>
                             </th>
-                            <th >
+                            <th ng-click="AdjustSort('year')" style="width:100px">
                                 Year
-                                <i ng-show="showPhoneNumber" class="material-icons small">trending_down</i>
+                                <i ng-show="showYearDesc" class="material-icons tiny">trending_down</i>
+                                <i ng-show="showYearAsc" class="material-icons tiny">trending_up</i>
                             </th>
                             <th id='buttons' ></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="x in studentList">
+                        <tr ng-repeat="x in studentList | orderBy:sortType:sortReverse">
                             <td>{{x.fname + " " + x.lname}}</td>
-                            <td>{{x.startDate}}</td>
+                            <td>{{x.startDate | date}}</td>
                             <td>{{x.street}}</td>
                             <td>{{x.city}}</td>
                             <td>{{x.state}}</td>
@@ -157,7 +165,7 @@
 <div class="modal" id="loadingModal" >
     <div class="modal-content">
         <div class="progress">
-            <div class="determinate" id="progressBar" style="width: 70%"></div>
+            <div class="determinate" id="progressBar" style="width: 0%"></div>
         </div>
     </div>
 </div>
