@@ -11,9 +11,13 @@ Although the following page has very little practical use in the real world, it 
 ## Installation
 
 Step 1: Have node (version 6 or higher) and npm installed.
+
 Step 2: Download the code in this project in it's entirety.
+
 Step 3a: Look under server >> nodeserver.js and see all of the npm packages being downloaded
+
 Step 3b: Use npm to install all of the neccessary modules.
+
 Step 4: type "node nodeserver.js" from within the server folder on a command prompt.
 
 All done! The server will display to the console that it is listening. Head to your browser and type "localhost:3000" in the URL.
