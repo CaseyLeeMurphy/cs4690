@@ -1,60 +1,147 @@
-/*global $*/
-/*global jQuery*/
-/*global Cookies*/
-
-
 // ------------------------------ Declare global variables -------------------------------
 // ---------------------------------------------------------------------------------------
-let listOfStudentIDs;
+let listOfStudentIDs = [];
 let studentData = [];
 let ajaxCount = 0;
 let currentStudentID;
 let deletedStudents = [];
 let firstTimeThrough = true;
+let isEditing;
 
 // -------------- Code to be executed when page has loaded -------------------------------
 // ---------------------------------------------------------------------------------------
 $(document).ready(function(){
-    // Hide the tables and tiles
-    $("#studentDataTiles").hide();
-    $("#studentDataTableDiv").hide();  
-    hideAllSortButtons();
-    
-    // Set up tooltips
-    $('[data-toggle="tooltip"]').tooltip();
-    
-    // Get the list of students
-    $.get("/api/v1/students", function(response) {
-        listOfStudentIDs = response;
-        getStudentDataFromListOfIDs(listOfStudentIDs)
 
-        if (Cookies.get('ViewType') === 'Table') $("#studentDataTableDiv").slideDown();
-        if (Cookies.get('ViewType') === 'Tiles') $("#studentDataTiles").slideDown();
-    });
-    
-    // Set up non-table click events
-    setUpNonTableRowClickFunctions();
+    $('.modal').modal();
+    $('select').material_select();
+    // // Hide the tables and tiles
+    // $("#studentDataTiles").hide();
+    // $("#studentDataTableDiv").hide();
+    // hideAllSortButtons();
+    //
+    // // Set up tooltips
+    // $('[data-toggle="tooltip"]').tooltip();
+    //
+    // // Get the list of students
+    // $.get("/api/v1/students", function(response) {
+    //     listOfStudentIDs = response;
+    //     getStudentDataFromListOfIDs(listOfStudentIDs)
+    //
+    //     if (Cookies.get('ViewType') === 'Table') $("#studentDataTableDiv").slideDown();
+    //     if (Cookies.get('ViewType') === 'Tiles') $("#studentDataTiles").slideDown();
+    // });
+    //
+    // // Set up non-table click events
+    // setUpNonTableRowClickFunctions();
+});
+
+
+var app = angular.module('app', []);
+app.controller('studentsController', function($scope, $http){
+    $scope.studentList = [];
+
+    $http.get("/api/v1/students")
+        .then(function(response) {
+            listOfStudentIDs = response.data;
+
+            for (index in listOfStudentIDs){
+                $http.get('/api/v1/students/' + listOfStudentIDs[index])
+                    .then(function(response){
+                       $scope.studentList.push(response.data);
+                    });
+            }
+        });
+
+    $scope.editStudent = function(studentData) {
+        $scope.firstName = studentData.fname;
+        $scope.lastName = studentData.lname;
+        $scope.startDate = studentData.startDate;
+        $scope.street = studentData.street;
+        $scope.city = studentData.city;
+        $scope.state = studentData.state;
+        $scope.zip = studentData.zip;
+        $scope.phoneNumber = studentData.phone;
+        $scope.year = studentData.year;
+        currentStudentID = studentData.id;
+        $('#StudentModal').modal('open');
+        Materialize.updateTextFields();
+
+        isEditing = true;
+    }
+
+    $scope.addStudent = function() {
+        $scope.firstName = "";
+        $scope.lastName = "";
+        $scope.startDate = "";
+        $scope.street = "";
+        $scope.city = "";
+        $scope.state = "";
+        $scope.zip = "";
+        $scope.phoneNumber = "";
+        $scope.year = "";
+
+        Materialize.updateTextFields();
+
+        isEditing = false;
+    }
+
+    $scope.addOrEditStudent = function() {
+        jsonStudentData = {
+            "fname": $scope.firstName,
+            "lname": $scope.lastName,
+            "startDate": $scope.startDate,
+            "street": $scope.street,
+            "city": $scope.city,
+            "state": $scope.state,
+            "zip": $scope.zip,
+            "phone": $scope.phoneNumber,
+            "year": $scope.year
+        };
+
+        if (isEditing === true){
+            $http({
+                type: 'PUT',
+                url: `/api/v1/students/${currentStudentID}`,
+                data: JSONStudentData
+            }).then(function(response) {
+                // edit the view
+            });
+        } else {
+            $http({
+                type: 'POST',
+                url: `/api/v1/students/`,
+                data: JSONStudentData
+            }).then(function(response) {
+                    // Add student to list
+                }
+            );
+        }
+    }
+
+    $scope.deleteStudent = function(studentID) {
+        //http request to delete id
+        $http({
+            url: '/api/v1/students/' + studentID,
+            type: 'DELETE',
+        }).then(function() {
+            // filter on ID
+        });
+    }
+
+    $scope.showTable = function() {
+        $("#tableDiv").slideDown();
+        $("#tilesDiv").slideUp();
+        Cookies.set('ViewType', 'Table')
+    }
+
+    $scope.showTiles = function() {
+        $("#tableDiv").slideUp();
+        $("#tilesDiv").slideDown();
+        Cookies.set('ViewType', 'Tiles')
+    }
 });
 
 function setUpNonTableRowClickFunctions() {
-    
-    $("#btnTableView").click(function () {
-        $("#studentDataTiles").slideUp();
-        $("#studentDataTableDiv").slideDown();
-        Cookies.set('ViewType', 'Table')
-    });
-    
-    $("#btnTileView").click(function () {
-        $("#studentDataTableDiv").slideUp();
-        $("#studentDataTiles").slideDown();
-        Cookies.set('ViewType', 'Tiles')
-    });
-    
-    $('#btnAddStudent').click(function() {
-        $('#studentDataForm').trigger('reset');
-        $('.btnStudentModalSubmit').attr('id','btnSaveNew'); 
-        $('#editStudentModal').modal('show'); 
-    });
     
     $('#btnRestoreStudent').click(function() {
         if (deletedStudents.length === 0) {
@@ -329,9 +416,9 @@ function getStudentDataFromListOfIDs(listOfIDs) {
     }
     
     // Show the modal, reset the count, and start ajax get requests up to 10 times
-    $('#loadingModal').modal('show');
+    $('#loadingModal').modal('open');
     ajaxCount = 0;
-    
+
     for (let i = 0; (i < listOfIDs.length) && i < 10 ; i++) {
         ajaxStudentDataFromID(listOfIDs[i]);
     }
@@ -358,7 +445,7 @@ function ajaxStudentDataFromID(id) {
             studentData.push(responseData);
             
             // Update progress bar
-            $('.progress-bar').attr('style', `width: ${percentageComplete}%`);
+            $('#progressBar').attr('style', `width: ${percentageComplete}%`);
             
             
             // If we just completed the last ajax call, load the data into html table, and finish the progress bar. 
@@ -371,8 +458,8 @@ function ajaxStudentDataFromID(id) {
 
                     fillTableWithData(studentData);
                     fillStudentTiles(studentData);
-                    $('#loadingModal').modal('hide');
-                    $('.progress-bar').attr('style', 'width: 0%');
+                    $('#loadingModal').modal('close');
+                    $('#progressBar').attr('style', 'width: 0%');
                 }, 1000);
             }
         }, 1000);

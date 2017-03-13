@@ -1,158 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>Student Data</title>
-    <link rel="stylesheet" href="lib/bootstrap-3.3.2.min.css">
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png"  href="img/uvuFavicon.png" sizes="32x32">
-    <script src="lib/jquery-1.12.4.min.js"></script>
-    <script src="lib/bootstrap-3.3.2.min.js"></script>
-    <script src="lib/isotope-3.0.1.pkgd.js"></script>
-    <script src="index.js"></script>
-    <script src="lib/cookies-2.1.2.js"></script>
-    <script src="lib/sortComparators.js"></script>
-    <script src="lib/underscore-1.8.3.min.js"></script>
 </head>
-<body>
+<body ng-app="app" ng-controller="studentsController">
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="/index.html" class="brand-logo">Fun With Tables</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/index.html">Home</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+        <h1 class="header center orange-text">Student Data</h1>
+    </div>
+</div>
 
-    <nav class="navbar navbar-inverse navbar-custom">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <h2 class="navbar-brand">Fun With Tables</h2>
-            </div>
-        </div>
-    </nav>
-  
-    <div class="btn-group" data-toggle="buttons" style="margin:10px">
-        <label class="btn btn-default btn-lg" data-toggle="tooltip" title="View Data as Table" id="btnTableView">
-            <input type="radio" autocomplete="off"> <span class="glyphicon glyphicon-th-list"></span>
-        </label>
-        <label class="btn btn-default btn-lg" data-toggle="tooltip" title="View Data as Tiles" id="btnTileView">
-            <input type="radio" autocomplete="off"> <span class="glyphicon glyphicon-th"></span>
-        </label>
-    </div>
-    
-    <div class="btn btn-default btn-lg" id='btnAddStudent'  data-toggle="tooltip" title="Add New Student" style="margin:10px">
-        <span class="glyphicon glyphicon-plus"></span>
-    </div>
-    
-    <div class="btn btn-default btn-lg" id='btnRestoreStudent'  data-toggle="tooltip" title="Restore last deleted student" style="margin:10px">
-        <span class="glyphicon glyphicon-repeat"></span>
-    </div>
-    
-    <div id="studentDataTableDiv">
-        <table id="studentDataTable" class='table table-striped'>
-            <thead>
-                <tr>
-                    <th id='fnameAndlname'>
-                        Full Name <span id='fnameSort' class="glyphicon glyphicon-sort-by-alphabet"></span>
-                    </th>
-                    <th id='startDate'>
-                        Start Date <span id='startDateSort' class="glyphicon glyphicon-sort-by-order"></span>
-                    </th>
-                    <th id='street'>
-                        Street <span id='streetSort' class="glyphicon glyphicon-sort-by-alphabet"></span>
-                    </th>
-                    <th id='city'>
-                        City <span id='citySort' class="glyphicon glyphicon-sort-by-alphabet"></span>
-                    </th>
-                    <th id='state'>
-                        State <span id='stateSort' class="glyphicon glyphicon-sort-by-alphabet"></span>
-                    </th>
-                    <th id='zip'>
-                        Zip Code <span id='zipSort' class="glyphicon glyphicon-sort-by-order"></span>
-                    </th>
-                    <th id='phone'>
-                        Phone Number <span id='phoneSort' class="glyphicon glyphicon-sort-by-order"></span>
-                    </th>
-                    <th id='year'>
-                        Year <span id='yearSort' class="glyphicon glyphicon-sort-by-attributes"></span>
-                    </th>
-                    <th id='buttons'></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <div class="btn btn-default btn-lg btnLoadMore" style="margin:10px">Load More</div>
-    </div>
-    
-    <div id="studentDataTiles" class="grid">
-    </div>
-    
-    
-    <div class="modal fade" id="loadingModal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="10" style="width: 0%">
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="editStudentModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" >Student Information</h4>
-                </div>
-                <div class="modal-body">
-                    <form role="form" id="studentDataForm">
-                        <div class="form-group">
-                            <label for="stuFname">First Name:</label>
-                            <input type="text" class="form-control" id="stuFname">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuLname">Last Name:</label>
-                            <input type="text" class="form-control" id="stuLname">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuStartDate">Start Date:</label>
-                            <input type="text" class="form-control" id="stuStartDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuStreet">Street</label>
-                            <input type="text" class="form-control" id="stuStreet">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuCity">City:</label>
-                            <input type="text" class="form-control" id="stuCity">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuState">State</label>
-                            <input type="text" class="form-control" id="stuState">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuZip">Zip</label>
-                            <input type="text" class="form-control" id="stuZip">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuPhone">Phone Number</label>
-                            <input type="text" class="form-control" id="stuPhone">
-                        </div>
-                        <div class="form-group">
-                            <label for="stuYear">Select list:</label>
-                            <select class="form-control" id="stuYear">
-                                <option value="1" >Freshmen</option>
-                                <option value="2" >Sophomore</option>
-                                <option value="3" >Junior</option>
-                                <option value="4" >Senior</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btnStudentModalSubmit" data-dismiss="modal" id="btnSaveEdit">Save</button>
-                </div>
+<div class="container">
+    <div class="section">
+        <div class="row">
+            <div class="col s3 m3">
+                <a class="waves-effect waves-light btn tooltipped" data-tooltip="View as Table" data-position="top" ng-click="showTable()"><i class="material-icons medium">view_list</i></a>
+                <a class="waves-effect waves-light btn tooltipped" data-tooltip="View as Tiles" data-position="top" ng-click="showTiles()"><i class="material-icons medium">view_module</i></a>
+            </div>
+            <div class="col s9 s9 right">
+                <!--Modal trigger-->
+                <a class="waves-effect waves-light btn tooltipped"
+                   href="#StudentModal" data-tooltip="Add Student"
+                   data-position="top"
+                   ng-click="addStudent()">
+                    <i class="material-icons medium">note_add</i>
+                </a>
+
+                <a class="waves-effect waves-light btn tooltipped" data-tooltip="Undo Delete" data-position="top"><i class="material-icons medium">restore</i></a>
+            </div>
+        </div>
+        <!--   Icon Section   -->
+        <div class="row" id="tableDiv">
+            <div class="col s12 m12">
+                <table class='table highlight'>
+                    <thead>
+                        <tr>
+                            <th>
+                                Full Name
+                                <i ng-show="showEndDate" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                Start Date
+                                <i ng-show="showStartDate" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                Street
+                                <i ng-show="showStreet" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                City
+                                <i ng-show="showCity" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                State
+                                <i ng-show="showState" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                Zip Code
+                                <i ng-show="showZipCode" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                Phone Number
+                                <i ng-show="showPhoneNumber" class="material-icons small">trending_down</i>
+                            </th>
+                            <th>
+                                Year
+                                <i ng-show="showPhoneNumber" class="material-icons small">trending_down</i>
+                            </th>
+                            <th id='buttons'></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in studentList" ng-click="editStudent(x)">
+                            <td>{{x.fname + " " + x.lname}}</td>
+                            <td>{{x.startDate}}</td>
+                            <td>{{x.street}}</td>
+                            <td>{{x.city}}</td>
+                            <td>{{x.state}}</td>
+                            <td>{{x.zip}}</td>
+                            <td>{{x.phone}}</td>
+                            <td>{{getSchoolYearFromNumber(x.year)}}</td>
+                            <td>
+                                <a class="waves-effect waves-light btn tooltipped"
+                                   data-tooltip="Edit this student's info"
+                                   data-position="top" ng-click="editStudent(x)">
+                                    <i class="material-icons medium">mode_edit</i>
+                                </a>
+                                <a class="waves-effect waves-light btn tooltipped"
+                                   data-tooltip="Delete this student"
+                                   data-position="top" ng-click="deleteStudent(x.id)">
+                                    <i class="material-icons medium">delete</i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br><br>
+                <a class="waves-effect waves-light btn">Load More...</a>
+            </div>
+        </div>
+        <div class="row" id="tilesDiv">
+            <div id="studentDataTiles" class="grid col s12 m12">
             </div>
         </div>
     </div>
-    
+</div>
+
+<div class="modal" id="loadingModal" >
+    <div class="modal-content">
+        <div class="progress">
+            <div class="determinate" id="progressBar" style="width: 70%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit/Add Student Modal -->
+<div id="StudentModal" class="modal">
+    <div class="modal-content">
+        <h4>Student Information</h4>
+        <div class="input-field">
+            <input id="first_name" type="text"  ng-model="firstName">
+            <label for="first_name" class="active">First Name</label>
+        </div>
+        <div class="input-field">
+            <input id="last_name" type="text" ng-model="lastName">
+            <label for="last_name" class="active">Last Name</label>
+        </div>
+        <div class="input-field">
+            <input id="start_date" type="text"  placeholder="1/1/1900" ng-model="startDate">
+            <label for="start_date" class="active">Start Date</label>
+        </div>
+        <div class="input-field">
+            <input id="street" type="text"  ng-model="street">
+            <label for="street" class="active">Street</label>
+        </div>
+        <div class="input-field">
+            <input id="city" type="text"  ng-model="city">
+            <label for="city" class="active">City</label>
+        </div>
+        <div class="input-field">
+            <input id="state" type="text"  ng-model="state">
+            <label for="state" class="active">State</label>
+        </div>
+        <div class="input-field">
+            <input id="zip" type="text" ng-model="zip">
+            <label for="zip" class="active">Zip</label>
+        </div>
+        <div class="input-field">
+            <input id="phone_number" type="text" ng-model="phoneNumber">
+            <label for="phone_number" class="active">Phone Number</label>
+        </div>
+        <div class="input-field">
+            <select ng-model="year">
+                <option value="" disabled selected>Choose the Class Level</option>
+                <option value="1">Freshmen</option>
+                <option value="2">Sophomore</option>
+                <option value="3">Junior</option>
+                <option value="4" >Senior</option>
+            </select>
+            <label>Class Level</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="addOrEditStudent()">Save</a>
+    </div>
+</div>
+
+<footer class="page-footer orange">
+    <div class="footer-copyright">
+        <div class="container">
+            Made by Casey Lee Murphy!
+        </div>
+    </div>
+</footer>
+
+
+<!--  Scripts-->
+<script src="lib/isotope-3.0.1.pkgd.js"></script>
+<script src="lib/cookies-2.1.2.js"></script>
+<script src="lib/sortComparators.js"></script>
+<script src="lib/underscore-1.8.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="js/materialize.js"></script>
+<script src="js/init.js"></script>
+<script src="index.js"></script>
+
 </body>
 </html>
