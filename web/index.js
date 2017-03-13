@@ -8,7 +8,7 @@ let deletedStudents = [];
 let firstTimeThrough = true;
 let isEditing;
 let currentIndexLoaded = 0;
-let loadingAmount = 7;
+let loadingAmount = 5;
 let randomInterval = 750;
 
 // -------------- Code to be executed when page has loaded -------------------------------
@@ -27,20 +27,6 @@ $(document).ready(function(){
     // show the loading modal
     $('#loadingModal').modal('open');
 
-    // // Set up tooltips
-    // $('[data-toggle="tooltip"]').tooltip();
-    //
-    // // Get the list of students
-    // $.get("/api/v1/students", function(response) {
-    //     listOfStudentIDs = response;
-    //     getStudentDataFromListOfIDs(listOfStudentIDs)
-    //
-    //     if (Cookies.get('ViewType') === 'Table') $("#studentDataTableDiv").slideDown();
-    //     if (Cookies.get('ViewType') === 'Tiles') $("#studentDataTiles").slideDown();
-    // });
-    //
-    // // Set up non-table click events
-    // setUpNonTableRowClickFunctions();
 });
 
 
@@ -57,7 +43,7 @@ app.controller('studentsController', function($scope, $http){
                 setTimeout(function() {
                     $http.get('/api/v1/students/' + listOfStudentIDs[i])
                         .then(function (response) {
-                            response.data.id = listOfStudentIDs[currentIndexLoaded];
+                            //response.data.id = listOfStudentIDs[currentIndexLoaded];
                             $scope.studentList.push(response.data);
 
                             currentPercentage += 1/loadingAmount*100;
@@ -109,7 +95,8 @@ app.controller('studentsController', function($scope, $http){
             "state": $scope.state,
             "zip": $scope.zip,
             "phone": $scope.phoneNumber,
-            "year": $scope.year
+            "year": $scope.year,
+            "id":currentStudentID
         };
 
         if (isEditing === true){
@@ -118,7 +105,11 @@ app.controller('studentsController', function($scope, $http){
                 url: `/api/v1/students/${currentStudentID}`,
                 data: jsonStudentData
             }).then(function(response) {
-                // edit the view
+                for (index in $scope.studentList){
+                    if ($scope.studentList[index].id === jsonStudentData.id){
+                        $scope.studentList[index] = jsonStudentData;
+                    }
+                }
             });
         } else {
             $http({
@@ -126,7 +117,8 @@ app.controller('studentsController', function($scope, $http){
                 url: `/api/v1/students/`,
                 data: jsonStudentData
             }).then(function(response) {
-                    // Add student to list
+                    jsonStudentData.id = response.data;
+                    $scope.studentList.push(jsonStudentData);
                 }
             );
         }
@@ -140,6 +132,7 @@ app.controller('studentsController', function($scope, $http){
         }).then(function() {
             // filter on ID
             deletedStudents.push(studentInfo);
+            $scope.studentList = $scope.studentList.filter((student) => student.id != studentInfo.id);
         });
     }
 
@@ -175,7 +168,7 @@ app.controller('studentsController', function($scope, $http){
             setTimeout(function(){
                 $http.get('/api/v1/students/' + listOfStudentIDs[i])
                     .then(function(response){
-                        response.data.id = listOfStudentIDs[i];
+                        //response.data.id = listOfStudentIDs[i];
                         $scope.studentList.push(response.data);
 
                         currentPercentage += 1/loadingAmount*100;
@@ -191,11 +184,14 @@ app.controller('studentsController', function($scope, $http){
             Materialize.toast('Sorry, you gotta delete some before you bring \'em back', 5000)
             return;
         }
+        let studentToRestore = deletedStudents.pop();
+
+        $scope.studentList.push(studentToRestore);
 
         $http({
-            method: 'POST',
-            url: `/api/v1/students/`,
-            data: deletedStudents.pop()
+            method: 'put',
+            url: `/api/v1/students/${studentToRestore.id}`,
+            data: studentToRestore
         }).then(function(response) {
                 // Add student to list
             }
