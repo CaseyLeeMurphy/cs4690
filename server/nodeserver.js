@@ -1,8 +1,7 @@
 // ----------------------------------- Show that something is happening --------------------------
 // ------------------------------------------------------------------------------------------------
 console.log('Loading Server');
-const WEB = '/home/ubuntu/workspace/Students/web';
-// Can also use const WEB = __dirname.replace('server', 'web');
+const WEB = __dirname.replace('server', 'web');
 
 // ----------------------------------- Load main modules ------------------------------------------
 // ------------------------------------------------------------------------------------------------
@@ -103,7 +102,7 @@ app.get('*', function(req, res) {
     res.status(404).sendFile(WEB + '/404Error.html');
 });
 
-var server = app.listen(process.env.PORT);
+var server = app.listen(3000);
 
 // ----------------------------------- Gracefullly shutdown ---------------------------------------
 // ------------------------------------------------------------------------------------------------
