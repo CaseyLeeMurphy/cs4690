@@ -1,20 +1,20 @@
 ## CS 4690 - Angularified Project
 
-The following repository contains code that whose purpose is to display student information using a list of student data stored in JSON files. The code is written using a couple of pieces of the mean stack, although not fully implementing the entire stack. It's a work in progress and will get there eventually.
+The following repository contains code whose purpose is to display student information using a list of student data stored in JSON files. The code is written using a couple of pieces of the mean stack, although not fully implementing the entire stack. It's a work in progress and will get there eventually.
 
-The code was originally written using a hefty amount of jquery and bootstrap, but is currently being altered to use mainly Angular (v1), and implementing the design principles for Material Design.
+The code was originally written using a hefty amount of jquery and bootstrap, but has been refactored to use Angular (v1), and implements design principles for Material Design.
 
 ## But why?
 
-Although the following page has very little practical use in the real world, it is a proof of concept that has allowed me and my fellow class members practice design and programming principles in a real world setting.
+Although the following code has doesn't actually affect any data in for actual students, it is a proof of concept that has allowed me and my fellow class members practice design and programming principles in a real world setting.
 
 ## Installation
 
-Step 1: Have node (version 6 or higher) and npm installed.
+Step 1: Have node (version 6.*) and npm installed.
 
-Step 2: Download the code in this project in it's entirety.
+Step 2: Download all of the code in the CS4690 folder.
 
-Step 3a: Look under server >> nodeserver.js and see all of the npm packages being downloaded
+Step 3a: Look under server >> nodeserver.js and see all of the npm modules needed being downloaded.
 
 Step 3b: Use npm to install all of the neccessary modules.
 
