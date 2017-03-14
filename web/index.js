@@ -31,6 +31,24 @@ $(document).ready(function(){
 
 
 var app = angular.module('app', []);
+app.directive('headerDir', function() {
+    return {
+        template:`
+            <nav class="light-blue lighten-1" role="navigation">
+                <div class="nav-wrapper container"><a id="logo-container" href="/index.html" class="brand-logo">Fun With Tables</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="/index.html">Home</a></li>
+                    </ul>
+                    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+                </div>
+            </nav>
+            <div class="section no-pad-bot" id="index-banner">
+                <div class="container">
+                    <h1 class="header center orange-text">Student Data</h1>
+                </div>
+            </div>`
+    };
+});
 app.controller('studentsController', function($scope, $http){
     $scope.studentList = [];
 
@@ -64,9 +82,18 @@ app.controller('studentsController', function($scope, $http){
         $scope.zip = studentData.zip;
         $scope.phoneNumber = studentData.phone;
         $scope.year = studentData.year;
+        $('#modalYear').val(studentData.year);
         currentStudentID = studentData.id;
-        $('#StudentModal').modal('open');
-        Materialize.updateTextFields();
+
+        setTimeout(function() {
+            Materialize.updateTextFields();
+            $('select').material_select();
+            $('#StudentModal').modal('open');
+        }, 50);
+        // Materialize.updateTextFields();
+        // $('select').material_select();
+        // $('#StudentModal').modal('open');
+
 
         isEditing = true;
     }
@@ -81,6 +108,12 @@ app.controller('studentsController', function($scope, $http){
         $scope.zip = "";
         $scope.phoneNumber = "";
         $scope.year = "";
+
+        setTimeout(function() {
+            Materialize.updateTextFields();
+            $('select').material_select();
+            $('#StudentModal').modal('open');
+        }, 50);
 
         isEditing = false;
     }

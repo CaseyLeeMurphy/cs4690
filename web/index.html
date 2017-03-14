@@ -13,19 +13,8 @@
     <link rel="icon" type="image/png"  href="img/uvuFavicon.png" sizes="32x32">
 </head>
 <body ng-app="app" ng-controller="studentsController">
-<nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="/index.html" class="brand-logo">Fun With Tables</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="/index.html">Home</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
-<div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-        <h1 class="header center orange-text">Student Data</h1>
-    </div>
-</div>
+
+<header-dir></header-dir>
 
 
 <div class="container">
@@ -38,7 +27,7 @@
             <div class="col s9 s9 right">
                 <!--Modal trigger-->
                 <a class="waves-effect waves-light btn tooltipped"
-                   href="#StudentModal" data-tooltip="Add Student"
+                   data-tooltip="Add Student"
                    data-position="top"
                    ng-click="addStudent()">
                     <i class="material-icons medium">note_add</i>
@@ -148,7 +137,7 @@
                                 </a>
                                 <a class="waves-effect waves-light btn tooltipped right"
                                    data-tooltip="Delete this student"
-                                   data-position="top" ng-click="deleteStudent(x.id)">
+                                   data-position="top" ng-click="deleteStudent(x)">
                                     <i class="material-icons medium">delete</i>
                                 </a>
                             </div>
@@ -206,16 +195,14 @@
             <input id="phone_number" type="text" ng-model="phoneNumber">
             <label for="phone_number" class="active">Phone Number</label>
         </div>
-        <div class="input-field">
-            <select ng-model="year">
-                <option value="" disabled>Choose the Class Level</option>
-                <option value="1" >Freshmen</option>
-                <option value="2" >Sophomore</option>
-                <option value="3" >Junior</option>
-                <option value="4" >Senior</option>
-            </select>
-            <label>Class Level</label>
-        </div>
+        <label>Class Level</label>
+        <select ng-model="year" id="modalYear">
+            <option value="" disabled>Choose the Class Level</option>
+            <option value="1" >Freshmen</option>
+            <option value="2" >Sophomore</option>
+            <option value="3" >Junior</option>
+            <option value="4" >Senior</option>
+        </select>
     </div>
     <div class="modal-footer">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="addOrEditStudent()">Save</a>
@@ -233,7 +220,6 @@
 
 <!--  Scripts-->
 <script src="lib/cookies-2.1.2.js"></script>
-<script src="lib/sortComparators.js"></script>
 <script src="lib/underscore-1.8.3.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
