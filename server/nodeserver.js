@@ -1,8 +1,7 @@
 // ----------------------------------- Show that something is happening --------------------------
 // ------------------------------------------------------------------------------------------------
 console.log('Loading Server');
-const WEB = '/home/ubuntu/workspace/Students/web';
-// Can also use const WEB = __dirname.replace('server', 'web');
+const WEB = __dirname.replace('server', 'web');
 
 // ----------------------------------- Load main modules ------------------------------------------
 // ------------------------------------------------------------------------------------------------
@@ -34,8 +33,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // --------------------------------------- Post ---------------------------------------------------
 // ------------------------------------------------------------------------------------------------
 app.post("/api/v1/students", function (req, res) {
-    var data = JSON.stringify(req.body);
-    
     fs.readdir(__dirname + '/students', function(err, files) {
        if (err) throw err;
        
@@ -43,6 +40,8 @@ app.post("/api/v1/students", function (req, res) {
        var lastFile = files.pop();
        var lastFileID = lastFile.replace('.json', '');
        var id = ('0000' + (++lastFileID)).slice(-4);
+       req.body.id = id + 'json';
+       var data = JSON.stringify(req.body);
        fs.writeFile(`${__dirname}/students/${id}.json`, data, 'utf8', function(err) {
             if (err) throw err;
             res.status(200).json(id + '.json');
@@ -103,7 +102,7 @@ app.get('*', function(req, res) {
     res.status(404).sendFile(WEB + '/404Error.html');
 });
 
-var server = app.listen(process.env.PORT);
+var server = app.listen(3000);
 
 // ----------------------------------- Gracefullly shutdown ---------------------------------------
 // ------------------------------------------------------------------------------------------------
