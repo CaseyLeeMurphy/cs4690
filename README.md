@@ -12,13 +12,16 @@ Although the following code has doesn't actually affect any data in for actual s
 
 Step 1: Have node (version 6.*) and npm installed.
 
-Step 2: Download all of the code in the CS4690 folder.
+Step 2: Clone the repository to your local drive. 
 
-Step 3a: Look under server >> nodeserver.js and see all of the npm modules needed being downloaded.
+Step 3: Browse to location on local drive where repository was cloned. Go into cs4690 >> server, and use npm to downlaod the following packages (if they aren't already downloaded globally): 
+  a. express
+  b. morgan
+  c. compression
+  d. serve-favicon
+  e. body-parser
 
-Step 3b: Use npm to install all of the neccessary modules.
-
-Step 4: type "node nodeserver.js" from within the server folder on a command prompt.
+Step 4: type "node nodeserver.js" from within the same folder (cs4690 >> server)
 
 All done! The server will display to the console that it is listening. Head to your browser and type "localhost:3000" in the URL.
 
