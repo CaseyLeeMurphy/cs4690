@@ -40,7 +40,7 @@ app.post("/api/v1/students", function (req, res) {
        var lastFile = files.pop();
        var lastFileID = lastFile.replace('.json', '');
        var id = ('0000' + (++lastFileID)).slice(-4);
-       req.body.id = id + 'json';
+       req.body.id = id + '.json';
        var data = JSON.stringify(req.body);
        fs.writeFile(`${__dirname}/students/${id}.json`, data, 'utf8', function(err) {
             if (err) throw err;

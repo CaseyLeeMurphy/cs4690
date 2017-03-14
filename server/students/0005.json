@@ -1,12 +1,1 @@
-{
-   "fname": "Daniel",
-   "lname": "McCormic",
-   "startDate": "3/29/93",
-   "street": "44 West 300 South",
-   "city": "Greenville",
-   "state": "ID",
-   "zip": 93639,
-   "phone": "739-2131",
-   "year": 4,
-   "id": "0005.json"
-}
+{"fname":"Daniel","lname":"McCormic","startDate":"3/29/93","street":"44 West 300 South","city":"Greenville","state":"ID","zip":93639,"phone":"739-2131","year":"2","id":"0005.json"}
