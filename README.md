@@ -15,10 +15,15 @@ Step 1: Have node (version 6.*) and npm installed.
 Step 2: Clone the repository to your local drive. 
 
 Step 3: Browse to location on local drive where repository was cloned. Go into cs4690 >> server, and use npm to downlaod the following packages (if they aren't already downloaded globally): 
+  
   a. express
+  
   b. morgan
+  
   c. compression
+  
   d. serve-favicon
+  
   e. body-parser
 
 Step 4: type "node nodeserver.js" from within the same folder (cs4690 >> server)
