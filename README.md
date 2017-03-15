@@ -2,11 +2,11 @@
 
 The following repository contains code whose purpose is to display student information using a list of student data stored in JSON files. The code is written using a couple of pieces of the mean stack, although not fully implementing the entire stack. It's a work in progress and will get there eventually.
 
-The code was originally written using a hefty amount of jquery and bootstrap, but has been refactored to use Angular (v1), and implements design principles for Material Design.
+The code was originally written using a hefty amount of jquery and bootstrap, but has been refactored to use Angular (v1), and implements design principles for Material Design using materialize.js.
 
 ## But why?
 
-Although the following code has doesn't actually affect any data in for actual students, it is a proof of concept that has allowed me and my fellow class members practice design and programming principles in a real world setting.
+Although the following code doesn't actually affect any data for actual students, it is a proof of concept that has allowed me and my fellow class members to practice design and programming principles in a real world setting.
 
 ## Installation
 
@@ -16,11 +16,11 @@ Step 2: Clone the repository to your local drive.
 
 Step 3: Browse to location on local drive where repository was cloned. Go into cs4690 >> server, and use npm to downlaod the following packages (if they aren't already downloaded globally):
 
-  1. express
-  2. morgan
-  3. compression
-  4. serve-favicon
-  5. body-parser
+1. express
+2. morgan
+3. compression
+4. serve-favicon
+5. body-parser
 
 Step 4: type "node nodeserver.js" from within the same folder (cs4690 >> server)
 
