@@ -26,8 +26,7 @@ Step 4: type "node nodeserver.js" from within the same folder (cs4690 >> server)
 
 All done! The server will display to the console that it is listening. Head to your browser and type "localhost:3000" in the URL. It should look like this:
 
-![alt tag](http://url/to/img.png)
-
+![](https://github.com/CaseyLeeMurphy/cs4690/blob/master/indexPage.png)
 ## API Reference
 
 Please head to the following link for an API Reference guide:
