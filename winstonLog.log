@@ -1,0 +1,2 @@
+{"level":"info","message":"Testing out the info for the new logger","timestamp":"2017-04-13T17:10:42.492Z"}
+{"level":"info","message":"Looks like these go out to the file aaaand the console","timestamp":"2017-04-13T17:10:42.493Z"}

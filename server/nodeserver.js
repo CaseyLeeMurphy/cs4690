@@ -13,7 +13,53 @@ var fs = require('fs');
 var logger = require('morgan');
 var compression = require('compression');
 var favicon = require('serve-favicon');
-var  bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
+var colors = require('colors');
+var nconf = require('nconf');
+var winston = require('winston');
+
+// ----------------------------------- Testing New NPM Package ------------------------------------
+// ------------------------------------------------------------------------------------------------
+console.log('SOOOOMEEWHERE OVER THE RAINBOWWWW!'.rainbow);
+
+nconf.argv()
+   .env()
+   .file({ file: 'path/to/config.json' });
+ 
+// 
+// Set a few variables on `nconf`. 
+// 
+nconf.set('testVariable', 'My name is ')
+nconf.set('database:host', '127.0.0.1');
+nconf.set('database:port', 5984);
+
+// 
+// Get the entire database object from nconf. This will output 
+// { host: '127.0.0.1', port: 5984 } 
+// 
+console.log('foo: ' + nconf.get('foo'));
+console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
+console.log('database: ' + nconf.get('database:host'));
+
+var winston = require('winston');
+ 
+winston.log('info', 'Hello distributed log files!');
+winston.info('Hello again distributed logs');
+
+winston.level = 'debug';
+winston.log('debug','Now my debug messages are written to console');
+
+var testWinstonLogger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'winstonLog.log' })
+    ]
+  });
+
+testWinstonLogger.log('debug', 'Where does this one end up');
+testWinstonLogger.info('Testing out the info for the new logger');
+testWinstonLogger.info('Looks like these go out to the file aaaand the console');
+
 
 // ----------------------------------- create express app -----------------------------------------
 // ------------------------------------------------------------------------------------------------
