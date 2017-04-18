@@ -160,3 +160,7 @@
 {"level":"info","message":"Looks like these go out to the file aaaand the console","timestamp":"2017-04-18T01:22:37.910Z"}
 {"level":"info","message":"Testing out the info for the new logger","timestamp":"2017-04-18T01:22:49.715Z"}
 {"level":"info","message":"Looks like these go out to the file aaaand the console","timestamp":"2017-04-18T01:22:49.716Z"}
+{"level":"info","message":"Testing out the info for the new logger","timestamp":"2017-04-18T01:30:41.221Z"}
+{"level":"info","message":"Looks like these go out to the file aaaand the console","timestamp":"2017-04-18T01:30:41.222Z"}
+{"level":"info","message":"Testing out the info for the new logger","timestamp":"2017-04-18T01:34:20.189Z"}
+{"level":"info","message":"Looks like these go out to the file aaaand the console","timestamp":"2017-04-18T01:34:20.190Z"}

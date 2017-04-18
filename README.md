@@ -10,19 +10,15 @@ Although the following code doesn't actually affect any data for actual students
 
 ## Installation
 
-Step 1: Have node (version 6.*) and npm installed.
+Step 1: Have node (version 6.*), npm, and mongoDB installed. Make sure mongo is running on port 27017. 
 
 Step 2: Clone the repository to your local drive.
 
-Step 3: Browse to location on local drive where repository was cloned. Go into cs4690 >> server, and use npm to downlaod the following packages (if they aren't already downloaded globally):
+Step 3: Browse to location on local drive where repository was cloned in your terminal. In the folder containing the package.json, type "npm install". This should install all of the neccessary modules to get the app up and running
 
-1. express
-2. morgan
-3. compression
-4. serve-favicon
-5. body-parser
+Step 4: Type "npm run addStudents" to create a students collection in your mongo db, and add some records to it. 
 
-Step 4: type "node nodeserver.js" from within the same folder (cs4690 >> server)
+Step 5: Type "npm start" to boot up the app. 
 
 All done! The server will display to the console that it is listening. Head to your browser and type "localhost:3000" in the URL. It should look like this:
 

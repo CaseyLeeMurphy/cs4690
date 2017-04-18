@@ -6,8 +6,6 @@ const WEB = __dirname.replace('server', 'web');
 // ----------------------------------- Load main modules ------------------------------------------
 // ------------------------------------------------------------------------------------------------
 const express = require('express');
-const fs = require('fs');
-const studentData = require('./studentsMongoDao');
 
 // ----------------------------------- Load express middleware modules ----------------------------
 // ------------------------------------------------------------------------------------------------
@@ -18,6 +16,10 @@ const bodyParser = require('body-parser');
 const colors = require('colors');
 const nconf = require('nconf');
 const winston = require('winston');
+
+// ----------------------------------- Load Routes  -----------------------------------------------
+// ------------------------------------------------------------------------------------------------
+const studentData = require('./routes/studentData');
 
 // ----------------------------------- Testing New NPM Package ------------------------------------
 // ------------------------------------------------------------------------------------------------
@@ -71,79 +73,7 @@ app.use(compression());
 app.use(favicon(WEB + '/img/uvuFavicon.png'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-// ----------------------------------- REST end points --------------------------------------------
-// ------------------------------------------------------------------------------------------------
-
-// --------------------------------------- Post ---------------------------------------------------
-// ------------------------------------------------------------------------------------------------
-app.post("/api/v1/students", function (req, res) {
-    studentData.post(req.body, (err, result) => {
-        if (err) {
-            res.status(500).send("There was a problem inserting that record into the database");
-        } else {
-            console.log("Inserted student with newID of " + result);
-            res.status(200).send(result);
-        }    
-    });
-});
-
-// ---------------------------------------- Get ---------------------------------------------------
-// ------------------------------------------------------------------------------------------------
-app.get("/api/v1/students/:id", function(req, res) {
-    var id = req.params.id;
-
-    studentData.read(id, (err, result) => {
-        if (err) {
-            res.status(500).send("There was a problem reading that ID from the database");
-        } else {
-            res.status(201).send(result);
-        }    
-    });
-});
-
-// --------------------------------------- Update/Put ---------------------------------------------
-// ------------------------------------------------------------------------------------------------
-app.put("/api/v1/students/:id", function (req, res) {
-    var id = req.params.id;
-    var data = req.body;
-    
-    studentData.update(id, data, (err, result) => {
-        if (err) {
-            res.status(500).send("There was a problem updating that ID in the database");
-        } else {
-            console.log("Updated student with ID" + id);
-            res.status(204).send();
-        }    
-    });
-});
-
-// --------------------------------------- Delete -------------------------------------------------
-// ------------------------------------------------------------------------------------------------
-app.delete("/api/v1/students/:id", function (req, res) {
-    var id = req.params.id;
-
-    studentData.delete(id, (err, result) => {
-        if (err) {
-            res.status(500).send("There was a problem deleting that ID from the database");
-        } else {
-            console.log("Deleted student with ID" + id);
-            res.status(204).send();
-        }    
-    });
-});
-
-// --------------------------------------- List ---------------------------------------------------
-// ------------------------------------------------------------------------------------------------
-app.get("/api/v1/students", function(req, res) {
-    studentData.list((err, result) => {
-        if (err) {
-            res.status(500).send("There was a problem getting students from the database");
-        } else {
-            res.status(201).send(result);
-        }    
-    });
-});
+app.use(studentData);
 
 // ----------------------------------- traditional webserver stuff for serving static files -------
 // ------------------------------------------------------------------------------------------------
