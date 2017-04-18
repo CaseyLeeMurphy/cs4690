@@ -5,18 +5,19 @@ const WEB = __dirname.replace('server', 'web');
 
 // ----------------------------------- Load main modules ------------------------------------------
 // ------------------------------------------------------------------------------------------------
-var express = require('express');
-var fs = require('fs');
+const express = require('express');
+const fs = require('fs');
+const studentData = require('./studentsMongoDao');
 
 // ----------------------------------- Load express middleware modules ----------------------------
 // ------------------------------------------------------------------------------------------------
-var logger = require('morgan');
-var compression = require('compression');
-var favicon = require('serve-favicon');
-var bodyParser = require('body-parser');
-var colors = require('colors');
-var nconf = require('nconf');
-var winston = require('winston');
+const logger = require('morgan');
+const compression = require('compression');
+const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const colors = require('colors');
+const nconf = require('nconf');
+const winston = require('winston');
 
 // ----------------------------------- Testing New NPM Package ------------------------------------
 // ------------------------------------------------------------------------------------------------
@@ -40,8 +41,6 @@ nconf.set('database:port', 5984);
 console.log('foo: ' + nconf.get('foo'));
 console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
 console.log('database: ' + nconf.get('database:host'));
-
-var winston = require('winston');
  
 winston.log('info', 'Hello distributed log files!');
 winston.info('Hello again distributed logs');
@@ -79,65 +78,70 @@ app.use(bodyParser.urlencoded({extended: true}));
 // --------------------------------------- Post ---------------------------------------------------
 // ------------------------------------------------------------------------------------------------
 app.post("/api/v1/students", function (req, res) {
-    fs.readdir(__dirname + '/students', function(err, files) {
-       if (err) throw err;
-       
-       files.sort();
-       var lastFile = files.pop();
-       var lastFileID = lastFile.replace('.json', '');
-       var id = ('0000' + (++lastFileID)).slice(-4);
-       req.body.id = id + '.json';
-       var data = JSON.stringify(req.body);
-       fs.writeFile(`${__dirname}/students/${id}.json`, data, 'utf8', function(err) {
-            if (err) throw err;
-            res.status(200).json(id + '.json');
-        });
+    studentData.post(req.body, (err, result) => {
+        if (err) {
+            res.status(500).send("There was a problem inserting that record into the database");
+        } else {
+            console.log("Inserted student with newID of " + result);
+            res.status(200).send(result);
+        }    
     });
 });
 
 // ---------------------------------------- Get ---------------------------------------------------
 // ------------------------------------------------------------------------------------------------
-app.get("/api/v1/students/:id.json", function(req, res) {
+app.get("/api/v1/students/:id", function(req, res) {
     var id = req.params.id;
-    fs.readFile(`${__dirname}/students/${id}.json`, 'utf8', function (err, fileContents){
-        if (err) throw err;
-        
-        var parsedFileContents = JSON.parse(fileContents);
-        res.status(201).json(parsedFileContents);
+
+    studentData.read(id, (err, result) => {
+        if (err) {
+            res.status(500).send("There was a problem reading that ID from the database");
+        } else {
+            res.status(201).send(result);
+        }    
     });
 });
 
 // --------------------------------------- Update/Put ---------------------------------------------
 // ------------------------------------------------------------------------------------------------
-app.put("/api/v1/students/:id.json", function (req, res) {
+app.put("/api/v1/students/:id", function (req, res) {
     var id = req.params.id;
-    var data = JSON.stringify(req.body);
+    var data = req.body;
     
-    fs.writeFile(`${__dirname}/students/${id}.json`, data, 'utf8', function(err) {
-        if (err) throw err;
-        
-        res.sendStatus(204);
+    studentData.update(id, data, (err, result) => {
+        if (err) {
+            res.status(500).send("There was a problem updating that ID in the database");
+        } else {
+            console.log("Updated student with ID" + id);
+            res.status(204).send();
+        }    
     });
 });
 
 // --------------------------------------- Delete -------------------------------------------------
 // ------------------------------------------------------------------------------------------------
-app.delete("/api/v1/students/:id.json", function (req, res) {
+app.delete("/api/v1/students/:id", function (req, res) {
     var id = req.params.id;
-    fs.unlink(`${__dirname}/students/${id}.json`, function (err, fileContents){
-        if (err) throw err;
-        
-        res.sendStatus(204);
+
+    studentData.delete(id, (err, result) => {
+        if (err) {
+            res.status(500).send("There was a problem deleting that ID from the database");
+        } else {
+            console.log("Deleted student with ID" + id);
+            res.status(204).send();
+        }    
     });
 });
 
 // --------------------------------------- List ---------------------------------------------------
 // ------------------------------------------------------------------------------------------------
 app.get("/api/v1/students", function(req, res) {
-    fs.readdir(__dirname + '/students', function(err, files) {
-        if (err) throw err;
-        
-        res.status(200).json(files)
+    studentData.list((err, result) => {
+        if (err) {
+            res.status(500).send("There was a problem getting students from the database");
+        } else {
+            res.status(201).send(result);
+        }    
     });
 });
 

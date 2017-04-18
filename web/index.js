@@ -59,7 +59,7 @@ app.controller('studentsController', function($scope, $http){
 
             for (let i = 0; i < loadingAmount && i < listOfStudentIDs.length; i++){
                 setTimeout(function() {
-                    $http.get('/api/v1/students/' + listOfStudentIDs[i])
+                    $http.get('/api/v1/students/' + listOfStudentIDs[i]._id)
                         .then(function (response) {
                             //response.data.id = listOfStudentIDs[currentIndexLoaded];
                             $scope.studentList.push(response.data);
@@ -83,7 +83,7 @@ app.controller('studentsController', function($scope, $http){
         $scope.phoneNumber = studentData.phone;
         $scope.year = studentData.year;
         $('#modalYear').val(studentData.year);
-        currentStudentID = studentData.id;
+        currentStudentID = studentData._id;
 
         setTimeout(function() {
             Materialize.updateTextFields();
@@ -150,7 +150,7 @@ app.controller('studentsController', function($scope, $http){
                 url: `/api/v1/students/`,
                 data: jsonStudentData
             }).then(function(response) {
-                    jsonStudentData.id = response.data;
+                    jsonStudentData._id = response.data;
                     $scope.studentList.push(jsonStudentData);
                 }
             );
@@ -160,12 +160,12 @@ app.controller('studentsController', function($scope, $http){
     $scope.deleteStudent = function(studentInfo) {
         //http request to delete id
         $http({
-            url: '/api/v1/students/' + studentInfo.id,
+            url: '/api/v1/students/' + studentInfo._id,
             method: 'DELETE',
         }).then(function() {
             // filter on ID
             deletedStudents.push(studentInfo);
-            $scope.studentList = $scope.studentList.filter((student) => student.id != studentInfo.id);
+            $scope.studentList = $scope.studentList.filter((student) => student._id != studentInfo._id);
         });
     }
 
@@ -199,7 +199,7 @@ app.controller('studentsController', function($scope, $http){
 
         for (let i = initialIndex; i < initialIndex + loadingAmount && i < listOfStudentIDs.length; i++){
             setTimeout(function(){
-                $http.get('/api/v1/students/' + listOfStudentIDs[i])
+                $http.get('/api/v1/students/' + listOfStudentIDs[i]._id)
                     .then(function(response){
                         //response.data.id = listOfStudentIDs[i];
                         $scope.studentList.push(response.data);
@@ -223,7 +223,7 @@ app.controller('studentsController', function($scope, $http){
 
         $http({
             method: 'put',
-            url: `/api/v1/students/${studentToRestore.id}`,
+            url: `/api/v1/students/${studentToRestore._id}`,
             data: studentToRestore
         }).then(function(response) {
                 // Add student to list
