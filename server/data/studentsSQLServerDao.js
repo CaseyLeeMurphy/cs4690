@@ -41,6 +41,8 @@ exports.post = function(data, callbackFunc) {
                 @zip,
                 @phone,
                 @year)
+
+            SELECT @@IDENTITY
 		 `;
 
         return pool.request()
